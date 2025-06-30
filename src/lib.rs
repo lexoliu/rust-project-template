@@ -1,0 +1,13 @@
+#![warn(
+    missing_docs,
+    missing_debug_implementations,
+    clippy::all,
+    clippy::style,
+    clippy::correctness,
+    clippy::complexity,
+    clippy::suspicious,
+    clippy::perf,
+    clippy::pedantic,
+    clippy::nursery,
+    clippy::cargo
+)]
