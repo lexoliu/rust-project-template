@@ -5,12 +5,26 @@ on:
     branches: [ main, dev ]
   pull_request:
 
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
   CARGO_TERM_COLOR: always
+  # CI runs are one-shot: the incremental database is dead weight in the
+  # rust-cache tarball, and dev/test debuginfo is most of the target dir's
+  # size. Panics still print backtraces without line tables.
+  CARGO_INCREMENTAL: "0"
+  CARGO_PROFILE_DEV_DEBUG: "0"
+  CARGO_PROFILE_TEST_DEBUG: "0"
 
 jobs:
   test:
     name: Test
+    # The template itself cannot build: Cargo.toml still holds the
+    # cargo-generate `{{project-name}}` placeholder. Generated projects get a
+    # different repository name, so this guard only ever skips here.
+    if: github.repository != 'lexoliu/rust-project-template'
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
