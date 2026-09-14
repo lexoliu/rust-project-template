@@ -5,8 +5,18 @@ on:
     branches: [ main, dev ]
   pull_request:
 
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
   CARGO_TERM_COLOR: always
+  # CI runs are one-shot: the incremental database is dead weight in the
+  # rust-cache tarball, and dev/test debuginfo is most of the target dir's
+  # size. Panics still print backtraces without line tables.
+  CARGO_INCREMENTAL: "0"
+  CARGO_PROFILE_DEV_DEBUG: "0"
+  CARGO_PROFILE_TEST_DEBUG: "0"
 
 jobs:
   test:
