@@ -21,6 +21,10 @@ env:
 jobs:
   test:
     name: Test
+    # The template itself cannot build: Cargo.toml still holds the
+    # cargo-generate `{{project-name}}` placeholder. Generated projects get a
+    # different repository name, so this guard only ever skips here.
+    if: github.repository != 'lexoliu/rust-project-template'
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
